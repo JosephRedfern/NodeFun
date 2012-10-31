@@ -21,10 +21,20 @@ function handler( req, res){ //request, response
 
 io.sockets.on('connection', function(socket){
   
-  io.sockets.emit('joined', socket.id);
+  clients[socket.id] = null;
+  console.log("New client joined: "+socket.id);
+  io.sockets.emit('joined', clients);
+  console.log("New packet client packet sent");
 
   socket.on('mousepos', function(data){
-    io.sockets.emit('position', socket.id, data);
+    clients[socket.id]=data;
+    io.sockets.emit('position', clients);
+  });
+
+  socket.on('disconnect', function(){
+   delete clients[socket.id];
+   io.sockets.emit('dc', {socketid: socket.id});
   });
 
 });
+

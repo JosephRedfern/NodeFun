@@ -8,12 +8,22 @@
   "use strict"
 	var socket = io.connect('http://nodedev.redfern.me:4001');
 
-  socket.on('joined', function(socketid){
-      $("body").append('<img src="http://vps.redfern.me/cursor.gif" style="position:absolute;" id="'+socketid+'"/>');
-  });
-  socket.on('position', function(socketid, data){
-     $("#"+socketid).css({'left':data.data.x+'px', 'top':data.data.y+'px'}); 
-     console.log('update cursor for:'+socketid);
+socket.on('joined', function(msg){
+  for(var key in msg){
+    $("body").append('<img src="http://vps.redfern.me/cursor.gif" style="position:absolute;" id="'+key+'"/>');
+  }
+});
+
+socket.on('dc', function(msg){
+    $('#'+msg.socketid).remove();
+    alert("Disconnect Client!");
+});
+
+socket.on('position', function(msg){
+     for(var key in msg){
+       $("#"+key).css({'left':msg[key].data.x+'px', 'top':msg[key].data.y+'px'}); 
+       console.log('update cursor for:'+key);
+    }
 });
 
 </script>
