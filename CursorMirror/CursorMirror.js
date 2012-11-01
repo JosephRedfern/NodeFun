@@ -4,8 +4,7 @@ var http = require('http').createServer(handler), //create http instance
 
 http.listen(4001); //listen on port 4001
 
-var clients = {}
-
+var clients = {} //array of clients, key=socket.id, value=object literal containing co-ords
 
 function handler( req, res){ //request, response
 	fs.readFile(__dirname + '/index.html',
@@ -21,19 +20,20 @@ function handler( req, res){ //request, response
 
 io.sockets.on('connection', function(socket){
   
-  clients[socket.id] = null;
+  clients[socket.id] = null;//no initial mouse position
   console.log("New client joined: "+socket.id);
-  io.sockets.emit('joined', clients);
-  console.log("New packet client packet sent");
+  io.sockets.emit('joined', clients);//send out new client list
+  console.log("New client packet sent");
 
   socket.on('mousepos', function(data){
-    clients[socket.id]=data;
-    io.sockets.emit('position', clients);
+    clients[socket.id]=data; //set new mouse co-ords in object literal
+		var socketid = socket.id 
+		o.sockets.emit('position', {socketid:data}); //emit position of moved cursor
   });
 
   socket.on('disconnect', function(){
-   delete clients[socket.id];
-   io.sockets.emit('dc', {socketid: socket.id});
+   delete clients[socket.id]; //delete value from clients literal
+   io.sockets.emit('dc', {socketid: socket.id}); //notify all clients of disconnected client
   });
 
 });

@@ -24,7 +24,7 @@ socket.on('position', function(msg){
        $("#"+key).css({'left':msg[key].data.x+'px', 'top':msg[key].data.y+'px'}); 
        console.log('update cursor for:'+key);
     }
-  $("#nclients").html('There are <b>'+Object.keys(msg).length+'</b> clients connected!');
+ // $("#nclients").html('There are <b>'+Object.keys(msg).length+'</b> clients connected!');
 });
 
 </script>
