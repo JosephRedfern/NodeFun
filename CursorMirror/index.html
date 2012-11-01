@@ -7,16 +7,24 @@
 <script>
   "use strict"
 	var socket = io.connect('http://nodedev.redfern.me:4001');
+  var clients = {} //matches with server client array
 
 socket.on('joined', function(msg){
   for(var key in msg){
-    $("body").append('<img id="'+key+'" style="position:absolute" src="http://vps.redfern.me/cursor.gif"/>'); 
-  }
+		if($('#'+key).length == 0){
+   	   $("body").append('<img id="'+key+'" style="position:absolute" src="http://vps.redfern.me/cursor.gif"/>'); 
+ 	  }
+	}
 
+	alert('New client joined');
+	
+	clients = msg;
 });
 
 socket.on('dc', function(msg){
     $('#'+msg.socketid).remove();
+		delete clients[msg.socketid];
+		console.log("Removed client: "+msg.socketid);
 });
 
 socket.on('position', function(msg){
@@ -24,7 +32,7 @@ socket.on('position', function(msg){
        $("#"+key).css({'left':msg[key].data.x+'px', 'top':msg[key].data.y+'px'}); 
        console.log('update cursor for:'+key);
     }
- // $("#nclients").html('There are <b>'+Object.keys(msg).length+'</b> clients connected!');
+  $("#nclients").html('There are <b>'+Object.keys(clients).length+'</b> clients connected!');
 });
 
 </script>
