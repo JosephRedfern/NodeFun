@@ -28,7 +28,7 @@ io.sockets.on('connection', function(socket){
   socket.on('mousepos', function(data){
     clients[socket.id]=data; //set new mouse co-ords in object literal
 		var socketid = socket.id 
-		o.sockets.emit('position', {socketid:data}); //emit position of moved cursor
+		io.sockets.emit('position', {socketid:data}); //emit position of moved cursor
   });
 
   socket.on('disconnect', function(){
